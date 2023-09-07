@@ -158,8 +158,8 @@
     </h1>
     <table class="transaction-table" style="padding: 20px">
       <thead>
-        <tr>
-          <th>Tanggal</th>
+        <tr style="text-align:center">
+          <th style="text-align:center;width:150px">Tanggal</th>
           <th>Supplier</th>
           <th>Nama Makanan</th>
           <th>Jumlah Supply</th>
@@ -167,13 +167,13 @@
           <th>Komisi Kantin</th>
           <th>Untuk Supplier</th>
           <th>Terjual</th>
-          <th>Total Kantin</th>
-          <th>Total Supplier</th>
-          <th>Aksi</th>
+          <th style="text-align:center;width:150px">Total Kantin</th>
+          <th style="text-align:center;width:150px">Total Supplier</th>
+          <th style="text-align:center;width:150px">Aksi</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="data in filteredDatas" :key="data.id">
+        <tr style="text-align:center" v-for="data in filteredDatas" :key="data.id">
           <td>{{ data.date }}</td>
           <td>{{ data.supplier }}</td>
           <td>{{ data.foodTitle }}</td>
@@ -736,7 +736,7 @@ const calculateCommission = (price) => {
 .transaction-table td {
   border: 1px solid #ddd;
   padding: 8px;
-  text-align: left;
+  text-align: center;
 }
 
 .transaction-table th {

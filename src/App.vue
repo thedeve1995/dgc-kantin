@@ -46,7 +46,7 @@ const handleSignOut = () => {
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Home</RouterLink> |
-        <RouterLink to="/data">Admin</RouterLink> |
+        <RouterLink to="/admin">Admin</RouterLink> |
         <RouterLink to="/login">Login</RouterLink> |
         <RouterLink to="/putra">Putra</RouterLink> |
         <RouterLink to="/putri">Putri</RouterLink> |

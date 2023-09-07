@@ -130,7 +130,17 @@
           </td>
         </tr>
         <tr>
-          <td colspan="8" style="text-align: right; font-weight: 700">Total</td>
+          <td colspan="8" style="text-align: center; font-weight: 700">
+            Total
+            <span style="color: gray">{{ startDate }} s/d {{ endDate }}</span> (
+            Rp
+            {{
+              formatNumberWithCommas(
+                calculateTotalKantin() + calculateTotalSupplier()
+              )
+            }}
+            )
+          </td>
           <td id="totalKantin" style="text-align: left; font-weight: 700">
             Rp {{ formatNumberWithCommas(calculateTotalKantin()) }}
           </td>
@@ -141,6 +151,49 @@
       </tbody>
     </table>
   </div>
+
+  <form class="addform" @submit.prevent="addReport">
+    <div class="input-form">
+      <div class="field has-addons">
+        <div class="control">
+          <label for="reportDate">Tanggal</label>
+          <input
+            id="reportDate"
+            v-model="reportDate"
+            class="input"
+            type="date"
+            placeholder="Tanggal"
+          />
+        </div>
+        <div class="control">
+          <label for="omsetKantin">Jumlah Omset Kantin</label>
+          <input
+            id="omsetKantin"
+            v-model="omsetKantin"
+            class="input"
+            type="number"
+            placeholder="amount"
+          />
+        </div>
+        <div class="control">
+          <label for="realMoney">Jumlah Uang Real</label>
+          <input
+            id="realMoney"
+            v-model="realMoney"
+            class="input"
+            type="number"
+            placeholder="price"
+          />
+        </div>
+        <div class="control">
+          <label style="color: transparent" for="">.</label>
+          <button :disabled="!realMoney" class="button is-info">
+            Buat Laporan
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
 
   <div class="modal" :class="{ 'is-active': editModalOpen }">
     <div class="modal-background"></div>
@@ -154,7 +207,6 @@
         ></button>
       </header>
       <section class="modal-card-body">
-        
         <div class="field">
           <label class="label">Supply Putra</label>
           <div class="control">
@@ -177,7 +229,6 @@
             />
           </div>
         </div>
-        
       </section>
       <footer class="modal-card-foot">
         <button @click="editData(editingDataId)" class="button is-success">
@@ -203,23 +254,35 @@ import {
 import { db } from "@/firebase";
 import html2canvas from "html2canvas"; // Import html2canvas
 import jsPDF from "jspdf";
+import { startOfDay } from "date-fns";
 
 const downloadAsPDF = () => {
   const screenshotElement = document.querySelector(".table-container");
 
   html2canvas(screenshotElement).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF();
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("RekapKantinPutra.pdf");
+    // Buat sebuah tautan untuk mengunduh gambar
+    const a = document.createElement("a");
+    a.href = imgData;
+    a.download = "RekapKantinPutra.png"; // Nama file yang akan diunduh
+    a.click();
   });
 };
 
+const currentDate = new Date();
+const startOfCurrentDay = startOfDay(currentDate);
 
+const filteredDatasForToday = computed(() => {
+  return filteredDatas.value.filter((data) => {
+    const dataDate = new Date(data.date);
+    return startOfDay(dataDate).getTime() === startOfCurrentDay.getTime();
+  });
+});
+
+const reportDate = ref("");
+const omsetKantin = ref("");
+const realMoney = ref("");
 
 const filterData = ref("");
 const startDate = ref("");
@@ -235,6 +298,20 @@ const editTerjual = ref("");
 const supplyPutra = ref("");
 const salesPutra = ref("");
 const editPrice = ref("");
+
+const addReport = () => {
+  const reportData = {
+    reportDate: reportDate.value,
+    omsetKantin: omsetKantin.value,
+    realMoney: realMoney.value,
+  };
+
+  addDoc(collection(db, "kantinReport"), reportData);
+
+  reportDate.value = "";
+  omsetKantin.value = "";
+  realMoney.value = "";
+};
 
 const editData = async (id) => {
   const dataIndex = datas.value.findIndex((t) => t.id === id);
@@ -374,6 +451,4 @@ const calculateCommission = (price) => {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

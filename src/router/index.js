@@ -23,8 +23,8 @@ const router = createRouter({
       component: LoginView
     },
     {
-      path: '/data',
-      name: 'data',
+      path: '/admin',
+      name: 'admin',
       component: DataView,
       meta :{
         requiresAuth:true,

@@ -98,7 +98,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="data in filteredDatas" :key="data.id">
+        <tr v-for="data in filteredDatasForToday" :key="data.id">
           <td>{{ data.date }}</td>
           <td>{{ data.supplier }}</td>
           <td>{{ data.foodTitle }}</td>
@@ -199,6 +199,7 @@ import {
 import { db } from "@/firebase";
 import html2canvas from "html2canvas"; // Import html2canvas
 import jsPDF from "jspdf";
+import { startOfDay } from "date-fns";
 
 const downloadAsPDF = () => {
   const screenshotElement = document.querySelector(".table-container");
@@ -214,6 +215,17 @@ const downloadAsPDF = () => {
     pdf.save("RekapKantinPutri.pdf");
   });
 };
+
+
+const currentDate = new Date();
+const startOfCurrentDay = startOfDay(currentDate);
+
+const filteredDatasForToday = computed(() => {
+  return filteredDatas.value.filter((data) => {
+    const dataDate = new Date(data.date);
+    return startOfDay(dataDate).getTime() === startOfCurrentDay.getTime();
+  });
+});
 
 const filterData = ref("");
 const startDate = ref("");
