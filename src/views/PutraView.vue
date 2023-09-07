@@ -11,6 +11,9 @@
     <button style="padding: 20px; width: 200px" @click="downloadAsPDF">
       Download as PDF
     </button>
+    
+      <RouterLink style="padding: 18px;color:black; width: 200px; text-align:center; background-color:#f2f2f2" to="/reportputra">Report Putra</RouterLink> 
+    
   </div>
 
   <div style="display: flex; flex-direction: column; align-items: center">

@@ -6,6 +6,7 @@ import RegisterView from '../views/RegisterView.vue'
 import DataView from '../views/DataView.vue'
 import PutriView from '../views/PutriView.vue'
 import PutraView from '../views/PutraView.vue'
+import ReportPutra from '../views/ReportPutra.vue'
 
 
 
@@ -34,6 +35,14 @@ const router = createRouter({
       path: '/putra',
       name: 'putra',
       component: PutraView,
+      meta :{
+        requiresAuth:true,
+      }
+    },
+    {
+      path: '/reportputra',
+      name: 'reportputra',
+      component: ReportPutra,
       meta :{
         requiresAuth:true,
       }
