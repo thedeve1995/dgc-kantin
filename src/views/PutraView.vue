@@ -101,7 +101,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="data in filteredDatas" :key="data.id">
+        <tr v-for="data in filteredDatasForToday" :key="data.id">
           <td>{{ data.date }}</td>
           <td>{{ data.supplier }}</td>
           <td>{{ data.foodTitle }}</td>
@@ -264,12 +264,13 @@ const downloadAsPDF = () => {
 
   html2canvas(screenshotElement).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF();
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    // Buat sebuah tautan untuk mengunduh gambar
-    const a = document.createElement("a");
-    a.href = imgData;
-    a.download = "RekapKantinPutra.png"; // Nama file yang akan diunduh
-    a.click();
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("screenshot.pdf");
   });
 };
 

@@ -77,48 +77,6 @@
     </table>
   </div>
 
-  <form class="addform" @submit.prevent="addReport">
-    <div class="input-form">
-      <div class="field has-addons">
-        <div class="control">
-          <label for="reportDate">Tanggal</label>
-          <input
-            id="reportDate"
-            v-model="reportDate"
-            class="input"
-            type="date"
-            placeholder="Tanggal"
-          />
-        </div>
-        <div class="control">
-          <label for="omsetKantin">Jumlah Omset Kantin</label>
-          <input
-            id="omsetKantin"
-            v-model="omsetKantin"
-            class="input"
-            type="number"
-            placeholder="amount"
-          />
-        </div>
-        <div class="control">
-          <label for="realMoney">Jumlah Uang Real</label>
-          <input
-            id="realMoney"
-            v-model="realMoney"
-            class="input"
-            type="number"
-            placeholder="price"
-          />
-        </div>
-        <div class="control">
-          <label style="color: transparent" for="">.</label>
-          <button :disabled="!realMoney" class="button is-info">
-            Buat Laporan
-          </button>
-        </div>
-      </div>
-    </div>
-  </form>
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";

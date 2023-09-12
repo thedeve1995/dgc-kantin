@@ -2,8 +2,9 @@
 
 
 body{
-  background-color: rgb(41, 38, 43);
-
+  background:url(background.jpg);
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 @media (max-width: 800px){
@@ -12,10 +13,11 @@ body{
   }
 }
 #app {
-  max-width: 1380px;
+  max-width: 1580px;
   margin: 0 auto;
   font-weight: normal;
   padding: 30px;
+  background-color: rgba(29, 28, 28, 0.61);
 }
 
 a,

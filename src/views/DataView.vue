@@ -208,7 +208,17 @@
           </td>
         </tr>
         <tr>
-          <td colspan="8" style="text-align: right; font-weight: 700">Total</td>
+          <td colspan="8" style="text-align: center; font-weight: 700">
+            Total
+            <span style="color: gray">{{ startDate }} s/d {{ endDate }}</span> (
+            Rp
+            {{
+              formatNumberWithCommas(
+                calculateTotalKantin() + calculateTotalSupplier()
+              )
+            }}
+            )
+          </td>
           <td id="totalKantin" style="text-align: left; font-weight: 700">
             Rp {{ formatNumberWithCommas(calculateTotalKantin()) }}
           </td>
@@ -436,7 +446,7 @@ const downloadAsPDF = () => {
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("screenshot.pdf");
+    pdf.save("reportKantin.pdf");
   });
 };
 
@@ -518,13 +528,15 @@ const editData = async (id) => {
         ...datas.value[dataIndex],
         ...editedData,
       };
+      filterDatas();
       closeEditModal();
     } catch (error) {
       console.error("Error editing transaction:", error);
       // Handle error here (e.g., show an error message)
     }
   }
-  filterDatas();
+  
+
 };
 
 const openEditModal = (id) => {
@@ -712,6 +724,7 @@ const calculateCommission = (price) => {
     return 300;
   }
 };
+
 </script>
 
 <style>
