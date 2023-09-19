@@ -4,7 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import DataView from '../views/DataView.vue'
-import PutriView from '../views/PutriView.vue'
+
 import PutraView from '../views/PutraView.vue'
 import ReportPutra from '../views/ReportPutra.vue'
 
@@ -21,7 +21,10 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta :{
+        requiresAuth:false,
+      }
     },
     {
       path: '/admin',
@@ -46,16 +49,7 @@ const router = createRouter({
       meta :{
         requiresAuth:true,
       }
-    },
-    {
-      path: '/putri',
-      name: 'putri',
-      component: PutriView,
-      meta :{
-        requiresAuth:true,
-      }
-    },
-    
+    },  
     {
       path: '/register',
       name: 'register',

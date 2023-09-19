@@ -58,20 +58,33 @@
     >
       <thead>
         <tr>
+          <th>No</th>
           <th>Tanggal</th>
           <th>Omset</th>
           <th>Real</th>
           <th>Selisih</th>
+          <th>Action</th>
+          
         </tr>
       </thead>
       <tbody>
-        <tr v-for="data in filteredDatas" :key="data.id">
+        <tr v-for="(data,index) in filteredDatas" :key="data.id">
+          <td>{{ index +1 }}</td>
           <td>{{ data.reportDate }}</td>
           <td>Rp {{ formatNumberWithCommas(data.omsetKantin) }}</td>
           <td>Rp {{ formatNumberWithCommas(data.realMoney) }}</td>
           <td>
             Rp {{ formatNumberWithCommas(data.realMoney - data.omsetKantin) }}
           </td>
+          <td style="display:flex;justify-content:center;">
+            <button  @click="deleteData(data.id)" class="delete-button">
+              Hapus
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th style="text-align:center;font-weight:700;" colspan="4">Total Minus Harian</th>
+          <th style="font-weight:700;">Rp {{ formatNumberWithCommas(calculateTotalSelisih()) }}</th>
         </tr>
       </tbody>
     </table>
@@ -140,9 +153,14 @@ const addReport = () => {
   realMoney.value = "";
 };
 
+const deleteData = async (id) => {
+  deleteDoc(doc(db, "kantinReport", id));
+};
+
+
 const transactionCollectionQuery = query(
-  collection(db, "kantinReport")
-  // orderBy("supplier", "asc")
+  collection(db, "kantinReport"),
+  orderBy("reportDate", "asc")
 );
 
 const datas = ref([]);
@@ -186,19 +204,12 @@ const filterDatas = () => {
   });
 };
 
-const calculateTotalKantin = () => {
+const calculateTotalSelisih = () => {
   return filteredDatas.value.reduce((total, data) => {
-    return total + calculateCommission(data.price) * data.salesPutra;
+    return total + data.realMoney - data.omsetKantin;
   }, 0);
 };
 
-const calculateTotalSupplier = () => {
-  return filteredDatas.value.reduce((total, data) => {
-    return (
-      total + (data.price - calculateCommission(data.price)) * data.salesPutra
-    );
-  }, 0);
-};
 
 const formatNumberWithCommas = (number) => {
   let numStr = number.toString();
@@ -211,13 +222,6 @@ const formatNumberWithCommas = (number) => {
   return formattedValue;
 };
 
-const calculateCommission = (price) => {
-  if (price > 6000) {
-    return 500;
-  } else if (price >= 2500 && price <= 6000) {
-    return 300;
-  }
-};
 </script>
 
 <style></style>

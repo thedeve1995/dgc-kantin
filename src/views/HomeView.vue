@@ -89,6 +89,7 @@
     <table class="transaction-table">
       <thead>
         <tr>
+          <th>No</th>
           <th>Tanggal</th>
           <th>Supplier</th>
           <th>Nama Makanan</th>
@@ -100,7 +101,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="data in filteredDatasForToday" :key="data.id">
+        <tr v-for="(data,index) in filteredDatasForToday" :key="data.id">
+          <td>{{ index+1 }}</td>
           <td>{{ data.date }}</td>
           <td>{{ data.supplier }}</td>
           <td>{{ data.foodTitle }}</td>
@@ -132,7 +134,6 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 import { startOfDay } from "date-fns";
-
 
 
 const amount = ref("");
@@ -192,19 +193,6 @@ const filteredDatasForToday = computed(() => {
   });
 });
 
-const calculateTotalKantin = () => {
-  return filteredDatas.value.reduce((total, data) => {
-    return total + calculateCommission(data.price) * data.terjual;
-  }, 0);
-};
-
-const calculateTotalSupplier = () => {
-  return filteredDatas.value.reduce((total, data) => {
-    return (
-      total + (data.price - calculateCommission(data.price)) * data.terjual
-    );
-  }, 0);
-};
 
 const addData = () => {
   const supplierData = {
@@ -223,25 +211,6 @@ const addData = () => {
   foodTitle.value = "";
   price.value = "";
 };
-
-const totalIncome = computed(() => {
-  return filteredTransactions.value
-    .filter(
-      (transaction) =>
-        transaction.transactiontype === "Pemasukan" ||
-        transaction.transactiontype === "Hutang"
-    )
-    .reduce((total, transaction) => {
-      return total + parseFloat(transaction.amount);
-    }, 0);
-});
-const totalOutcome = computed(() => {
-  return filteredTransactions.value
-    .filter((transaction) => transaction.transactiontype === "Pengeluaran")
-    .reduce((total, transaction) => {
-      return total + parseFloat(transaction.amount);
-    }, 0);
-});
 
 
 const formatNumberWithCommas = (number) => {

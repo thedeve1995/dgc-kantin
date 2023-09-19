@@ -87,6 +87,7 @@
     <table class="transaction-table" style="padding: 20px">
       <thead>
         <tr>
+          <th>No</th>
           <th>Tanggal</th>
           <th>Supplier</th>
           <th>Nama Makanan</th>
@@ -101,7 +102,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="data in filteredDatasForToday" :key="data.id">
+        <tr v-for="(data,index) in filteredDatasForToday" :key="data.id">
+          <td>{{ index+1 }}</td>
           <td>{{ data.date }}</td>
           <td>{{ data.supplier }}</td>
           <td>{{ data.foodTitle }}</td>
@@ -133,7 +135,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="8" style="text-align: center; font-weight: 700">
+          <td colspan="9" style="text-align: center; font-weight: 700">
             Total
             <span style="color: gray">{{ startDate }} s/d {{ endDate }}</span> (
             Rp

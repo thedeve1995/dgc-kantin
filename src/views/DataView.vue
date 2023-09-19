@@ -159,6 +159,7 @@
     <table class="transaction-table" style="padding: 20px">
       <thead>
         <tr style="text-align:center">
+          <th style="text-align:center;width:20px">No</th>
           <th style="text-align:center;width:150px">Tanggal</th>
           <th>Supplier</th>
           <th>Nama Makanan</th>
@@ -173,7 +174,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr style="text-align:center" v-for="data in filteredDatas" :key="data.id">
+        <tr style="text-align:center" v-for="(data,index) in filteredDatas" :key="data.id">
+          <td>{{ index+1 }}</td>
           <td>{{ data.date }}</td>
           <td>{{ data.supplier }}</td>
           <td>{{ data.foodTitle }}</td>
@@ -208,7 +210,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="8" style="text-align: center; font-weight: 700">
+          <td colspan="9" style="text-align: center; font-weight: 700">
             Total
             <span style="color: gray">{{ startDate }} s/d {{ endDate }}</span> (
             Rp
@@ -574,6 +576,7 @@ const closeEditModal = () => {
 
 const deleteData = async (id) => {
   deleteDoc(doc(db, "kantin", id));
+  filterDatas();
 };
 
 const transactionCollectionQuery = query(
@@ -583,10 +586,6 @@ const transactionCollectionQuery = query(
 );
 const datas = ref([]);
 const filteredDatas = ref([]);
-const nameDatas = ref([]);
-const amountDatas = ref([]);
-const foodTitleDatas = ref([]);
-const terjualDatas = ref([]);
 
 onMounted(() => {
   loadDatas();
@@ -597,11 +596,7 @@ onMounted(() => {
 const loadDatas = () => {
   onSnapshot(transactionCollectionQuery, (querySnapshot) => {
     const fbData = [];
-    const supplierNames = []; // Array untuk menyimpan nama supplier
-    const amountArray = [];
-    const terjualArray = [];
-    const foodTitleArray = [];
-
+    
     querySnapshot.forEach((doc) => {
       const data = {
         id: doc.id,
@@ -617,20 +612,10 @@ const loadDatas = () => {
       };
 
       fbData.push(data);
-      supplierNames.push(data.supplier); // Menambahkan nama supplier ke array
-      amountArray.push(data.amount);
-      terjualArray.push(data.terjual);
-      foodTitleArray.push(data.foodTitle);
     });
-
     datas.value = fbData;
     filteredDatas.value = fbData;
-    nameDatas.value = supplierNames; // Menyimpan array nama supplier ke nameDatas
-    amountDatas.value = amountArray;
-    terjualDatas.value = terjualArray;
-    foodTitleDatas.value = foodTitleArray;
-
-    
+  
   });
 };
 
@@ -681,29 +666,7 @@ const addData = () => {
   date.value = "";
   foodTitle.value = "";
   price.value = "";
-};
 
-const totalIncome = computed(() => {
-  return filteredTransactions.value
-    .filter(
-      (transaction) =>
-        transaction.transactiontype === "Pemasukan" ||
-        transaction.transactiontype === "Hutang"
-    )
-    .reduce((total, transaction) => {
-      return total + parseFloat(transaction.amount);
-    }, 0);
-});
-const totalOutcome = computed(() => {
-  return filteredTransactions.value
-    .filter((transaction) => transaction.transactiontype === "Pengeluaran")
-    .reduce((total, transaction) => {
-      return total + parseFloat(transaction.amount);
-    }, 0);
-});
-
-const deleteTransaction = async (id) => {
-  deleteDoc(doc(db, "finance", id));
 };
 
 const formatNumberWithCommas = (number) => {
@@ -728,9 +691,6 @@ const calculateCommission = (price) => {
 </script>
 
 <style>
-#myChart {
-  transform: scale(0.8);
-}
 
 .table-container {
   display: flex;
