@@ -102,7 +102,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(data,index) in filteredDatasForToday" :key="data.id">
+        <tr v-for="(data,index) in filteredDatas" :key="data.id">
           <td>{{ index+1 }}</td>
           <td>{{ data.date }}</td>
           <td>{{ data.supplier }}</td>
