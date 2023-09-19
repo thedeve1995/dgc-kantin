@@ -47,8 +47,8 @@ const handleSignOut = () => {
       <nav>
         <RouterLink to="/">Home</RouterLink> |
         <RouterLink to="/admin">Admin</RouterLink> |
-        <RouterLink to="/login">Login</RouterLink> |
         <RouterLink to="/putra">Putra</RouterLink> |
+        <RouterLink v-if="isLoggedIn" to="/register">Register</RouterLink> |
         <p class="user" v-if="isLoggedIn">{{ user.email.slice(0,7) }}</p> |
         <button @click="handleSignOut" v-if="isLoggedIn" style="padding: 5px 10px;border-radius: 10px;">Sign Out</button>
       </nav>
